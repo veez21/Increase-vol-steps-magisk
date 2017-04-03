@@ -4,14 +4,23 @@
 
 div="========"
 MODDIR=/magisk/increase_vol_steps
+prop=$MODDIR/system.prop
 
 clear
+
+current=$(getprop ro.config.media_vol_steps)
+applied=$(grep ro.config.media_vol_steps $prop); applied=${applied#*=}
 
 echo "$div"
 echo "Change Max Volume Step"
 echo "$div"
 echo ""
-echo "Current: $(getprop ro.config.media_vol_steps)"
+echo "Current: $current"
+if [ "$current" == "$applied" ]; then
+echo "Applied: $applied"
+echo "NOTE: REBOOT TO APPLY CHANGES"
+fi
+echo ""
 echo -n "Change to: "
 read volume
 if [ "$volume" == "" ] || [ -n "$(echo $volume | tr -d '0-9')" ]; then
@@ -21,7 +30,7 @@ exit 1
 else
 echo "Changing to $volume"
 sleep 1
-sed -i "s/ro.config.media_vol_steps=.*/ro.config.media_vol_steps=${volume}/g" $MODDIR/system.prop
+sed -i "s/ro.config.media_vol_steps=.*/ro.config.media_vol_steps=${volume}/g" $prop
 echo "Reboot to apply changes"
 exit 
 fi
