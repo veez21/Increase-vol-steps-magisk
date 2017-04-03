@@ -16,10 +16,10 @@ echo "Change Max Volume Step"
 echo "$div"
 echo ""
 echo "Current: $current"
-if [ "$current" == "$applied" ]; then
+if [ "$current" -ne "$applied" ]; then
 echo "Applied: $applied"
 echo "NOTE: REBOOT TO APPLY CHANGES"
-fi
+fi 
 echo ""
 echo -n "Change to: "
 read volume
