@@ -1,7 +1,7 @@
 id=increase_vol_steps
 name=Increase Volume Steps
-version=v1
-versionCode=1
+version=v1.2
+versionCode=3
 author=veez21
-description=Increase Volume Steps (USE 'vol_magisk' cmd in Terminal Emulator to change custom volume step)
+description=Increase Volume Steps (Use 'vol_magisk' cmd in Terminal Emulator to change custom volume step)
 template=3

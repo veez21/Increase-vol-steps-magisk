@@ -2,35 +2,62 @@
 # Increase Volume Steps (Magisk)
 # by veez21 @ xda-developers
 
-div="========"
+# Default Variables
+div="=============================="
 MODDIR=/magisk/increase_vol_steps
 prop=$MODDIR/system.prop
 
+# Functions
+get_file_prop() {
+_prop=$2
+_prop=$(grep "$1=" $_prop)
+val=${_prop#*=}
+echo $val
+unset _prop
+}
+
+set_file_prop() {
+_prop=$3
+sed -i "s/${1}=.*/${1}=${2}/g" $_prop
+unset _prop
+}
+
+# Extra Variables
+VER=$(get_file_prop version $MODDIR/module.prop)
+REL=$(get_file_prop versionCode $MODDIR/module.prop)
+
+# Main
 clear
 
 current=$(getprop ro.config.media_vol_steps)
-applied=$(grep ro.config.media_vol_steps $prop); applied=${applied#*=}
+applied=$(get_file_prop ro.config.media_vol_steps $prop)
 
 echo "$div"
+echo "Increase Volume Steps $VER(${REL})"
 echo "Change Max Volume Step"
 echo "$div"
 echo ""
+echo "$div"
 echo "Current: $current"
 if [ "$current" -ne "$applied" ]; then
-echo "Applied: $applied"
-echo "NOTE: REBOOT TO APPLY CHANGES"
+	echo "To be applied: $applied"
+	echo "NOTE: REBOOT TO APPLY CHANGES"
 fi 
+echo "$div"
 echo ""
 echo -n "Change to: "
 read volume
-if [ "$volume" == "" ] || [ -n "$(echo $volume | tr -d '0-9')" ]; then
-echo "Number only!"
-sleep 1
-exit 1
+if [ "$volume" == "$applied" ]; then
+	echo "Already entered"
+	exit 1
+elif [ "$volume" == "" ] || [ -n "$(echo $volume | tr -d '0-9')" ]; then
+	echo "Number only!"
+	sleep 1
+	exit 1
 else
-echo "Changing to $volume"
-sleep 1
-sed -i "s/ro.config.media_vol_steps=.*/ro.config.media_vol_steps=${volume}/g" $prop
-echo "Reboot to apply changes"
-exit 
+	echo "Changing to $volume"
+	sleep 1
+	set_file_prop ro.config.media_vol_steps ${volume} $prop
+	echo "Reboot to apply changes"
+	exit 
 fi
